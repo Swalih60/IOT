@@ -28,6 +28,11 @@ class _CartScreenState extends State<CartScreen> {
                     itemCount: context.watch<CartProvider>().item_name.length,
                     itemBuilder: (context, index) {
                       return ListTile(
+                        leading: Image.network(
+                          context.watch<CartProvider>().item_img[index],
+                          height: 40,
+                          width: 40,
+                        ),
                         title: Text(
                             context.watch<CartProvider>().item_name[index]),
                         trailing: IconButton(
