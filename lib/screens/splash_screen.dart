@@ -13,6 +13,7 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _opacityAnimation;
   late Animation<double> _opacityAnimation1;
 
+  // ignore: unused_field
   bool _isAnimationCompleted = false;
 
   @override
