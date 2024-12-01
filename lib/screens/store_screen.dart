@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:iot/providers/cart_provider.dart';
 import 'package:iot/screens/cart_screen.dart';
+import 'package:provider/provider.dart';
 
 class StoreScreen extends StatelessWidget {
   StoreScreen({super.key});
@@ -45,7 +47,7 @@ class StoreScreen extends StatelessWidget {
         body: GridView.builder(
           padding: EdgeInsets.all(10),
           itemCount: 6,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 20,
               crossAxisSpacing: 20,
@@ -73,7 +75,35 @@ class StoreScreen extends StatelessWidget {
                       height: 10,
                     ),
                     ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                title: Text("Confirm"),
+                                content: Text(
+                                  "Are you sure you want to add this item to cart?",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                actions: [
+                                  IconButton(
+                                      onPressed: () {
+                                        context.read<CartProvider>().addItem(
+                                            item: names[index],
+                                            img: urls[index]);
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Icon(Icons.check)),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Icon(Icons.close)),
+                                ]),
+                          );
+                        },
                         child: const Icon(Icons.shopping_cart))
                   ],
                 ),

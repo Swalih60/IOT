@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iot/providers/bottom_nav_provider.dart';
+import 'package:iot/providers/cart_provider.dart';
 import 'package:iot/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +17,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (context) => BottomProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CartProvider(),
         ),
       ],
       child: MaterialApp(
