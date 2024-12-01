@@ -21,64 +21,65 @@ class StoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          appBar: AppBar(
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 50.0),
-                child: GestureDetector(
-                  child: const Icon(
-                    Icons.shopping_cart,
-                    size: 30,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const CartScreen()));
-                  },
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text("SHOP"),
+          centerTitle: true,
+          elevation: 20,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                child: const Icon(
+                  Icons.shopping_cart,
+                  size: 30,
+                ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const CartScreen()));
+                },
+              ),
+            ),
+          ],
+        ),
+        body: GridView.builder(
+          padding: EdgeInsets.all(10),
+          itemCount: 6,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 20,
+              mainAxisExtent: 260),
+          itemBuilder: (context, index) {
+            bool vis = int.parse(quant[index]) > 0;
+            return Offstage(
+              offstage: !vis,
+              child: Card(
+                elevation: 20,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Image.network(
+                        urls[index],
+                        width: 100,
+                        height: 100,
+                      ),
+                    ),
+                    Text(names[index]),
+                    Text("Quantity : ${quant[index]}"),
+                    Text("Price : ${price[index]}"),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                        onPressed: () {},
+                        child: const Icon(Icons.shopping_cart))
+                  ],
                 ),
               ),
-            ],
-          ),
-          body: GridView.builder(
-            padding: EdgeInsets.all(10),
-            itemCount: 6,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 20,
-                mainAxisExtent: 260),
-            itemBuilder: (context, index) {
-              bool vis = int.parse(quant[index]) > 0;
-              return Offstage(
-                offstage: !vis,
-                child: Card(
-                  elevation: 20,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Image.network(
-                          urls[index],
-                          width: 100,
-                          height: 100,
-                        ),
-                      ),
-                      Text(names[index]),
-                      Text("Quantity : ${quant[index]}"),
-                      Text("Price : ${price[index]}"),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton(
-                          onPressed: () {},
-                          child: const Icon(Icons.shopping_cart))
-                    ],
-                  ),
-                ),
-              );
-            },
-          )),
-    );
+            );
+          },
+        ));
   }
 }
