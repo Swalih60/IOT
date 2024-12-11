@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class NavScreen extends StatelessWidget {
   NavScreen({super.key});
 
-  final list = [StoreScreen(), const ProfileScreen()];
+  final list = [const StoreScreen(), const ProfileScreen()];
 
   @override
   Widget build(BuildContext context) {

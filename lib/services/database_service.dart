@@ -21,11 +21,11 @@ class SupaBase {
     }
   }
 
-  Future<Map<String, dynamic>?> readItem({required int id}) async {
+  Future readItem({required int id}) async {
     try {
       final response =
           await database.from("items").select().eq("id", id).single();
-      return response as Map<String, dynamic>?;
+      return response;
     } catch (e) {
       print(e);
       return null;
