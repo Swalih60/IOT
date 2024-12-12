@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:iot/auth/login_screen.dart';
 import 'package:iot/providers/cart_provider.dart';
 import 'package:iot/providers/store_provider.dart';
 import 'package:iot/screens/cart_screen.dart';
 import 'package:iot/services/database_service.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StoreScreen extends StatefulWidget {
   const StoreScreen({super.key});
@@ -70,6 +72,21 @@ class _StoreScreenState extends State<StoreScreen> {
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const CartScreen()));
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GestureDetector(
+                child: const Icon(
+                  Icons.logout,
+                  size: 30,
+                ),
+                onTap: () async {
+                  await Supabase.instance.client.auth.signOut();
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => GlassLoginScreen(),
+                  ));
                 },
               ),
             ),
