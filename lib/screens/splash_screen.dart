@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iot/auth/login_screen.dart';
+import 'package:iot/screens/bottom_nav.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -12,9 +14,6 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _productDropAnimation;
   late Animation<double> _opacityAnimation;
   late Animation<double> _opacityAnimation1;
-
-  // ignore: unused_field
-  bool _isAnimationCompleted = false;
 
   @override
   void initState() {
@@ -38,17 +37,30 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _controller.forward().then((_) {
-      setState(() {
-        _isAnimationCompleted = true;
-      });
+      // Check user status after animation completes
+      _checkUser();
     });
+  }
 
-    Future.delayed(Duration(seconds: 4), () {
+  Future<void> _checkUser() async {
+    final user = Supabase.instance.client.auth.currentUser;
+
+    // Use a slight delay to ensure the animation is fully complete
+    await Future.delayed(Duration(milliseconds: 300));
+
+    if (user != null) {
+      // If user is logged in, navigate to Home Screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => NavScreen()),
+      );
+    } else {
+      // If user is not logged in, navigate to Login Screen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => GlassLoginScreen()),
       );
-    });
+    }
   }
 
   @override

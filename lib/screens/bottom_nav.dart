@@ -19,7 +19,7 @@ class NavScreen extends StatelessWidget {
         items: [
           BottomNavigationBarItem(
             icon: Container(
-              width: 100,
+              width: 80,
               height: 60,
               child: Icon(
                 Icons.store,
@@ -33,7 +33,7 @@ class NavScreen extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Container(
-              width: 100,
+              width: 80,
               height: 60,
               child: Icon(
                 Icons.person,
