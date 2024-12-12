@@ -14,13 +14,11 @@ class StoreScreen extends StatefulWidget {
 
 class _StoreScreenState extends State<StoreScreen> {
   SupaBase db = SupaBase();
-  bool loaded = false;
 
   @override
   void initState() {
     super.initState();
     _loadItems();
-    loaded = true;
 
     // final List<String> urls = [
     //   "https://assets.ajio.com/medias/sys_master/root/20240807/8Szc/66b378076f60443f31f3a482/-473Wx593H-462760846-black-MODEL.jpg",

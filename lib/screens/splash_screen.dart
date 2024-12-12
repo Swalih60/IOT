@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iot/screens/bottom_nav.dart';
+import 'package:iot/auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
     Future.delayed(Duration(seconds: 4), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => NavScreen()),
+        MaterialPageRoute(builder: (context) => GlassLoginScreen()),
       );
     });
   }
