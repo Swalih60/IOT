@@ -183,7 +183,7 @@ class _GlassLoginScreenState extends State<GlassLoginScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    "${e.toString()}",
+                                    "${e.toString().split(':').last.trim()}",
                                     style: TextStyle(color: Colors.red),
                                   ),
                                   padding: EdgeInsets.all(8),

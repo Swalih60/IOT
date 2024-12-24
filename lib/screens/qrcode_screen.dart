@@ -12,7 +12,7 @@ class QrScreen extends StatelessWidget {
       appBar: AppBar(),
       body: Center(
         child: QrImageView(
-          data: context.watch<CartProvider>().item_name.join(" "),
+          data: context.watch<CartProvider>().items[0]["item_name"],
           size: 300,
         ),
       ),

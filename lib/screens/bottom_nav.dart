@@ -19,11 +19,12 @@ class NavScreen extends StatelessWidget {
         items: [
           BottomNavigationBarItem(
             icon: Container(
-              width: 80,
-              height: 60,
+              width: 60,
+              height: 40,
               child: Icon(
                 Icons.store,
                 color: Colors.black,
+                size: 30,
               ),
               decoration: BoxDecoration(
                   color: Color.fromARGB(255, 232, 226, 226),
@@ -33,11 +34,12 @@ class NavScreen extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Container(
-              width: 80,
-              height: 60,
+              width: 60,
+              height: 40,
               child: Icon(
                 Icons.person,
                 color: Colors.black,
+                size: 30,
               ),
               decoration: BoxDecoration(
                   color: Color.fromARGB(255, 232, 226, 226),

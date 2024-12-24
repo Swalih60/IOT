@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:iot/screens/bottom_nav.dart';
+import 'package:iot/auth/login_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -211,36 +211,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               );
                             } else {
                               try {
-                                await Supabase.instance.client.auth
-                                    .signUp(
-                                        password:
-                                            _passwordController.text.trim(),
-                                        email: _emailController.text.trim())
-                                    .then((value) {
-                                  if (value.session != null &&
-                                      value.user != null) {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => NavScreen(),
-                                        ));
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          "SignUp error",
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                        padding: EdgeInsets.all(8),
-                                      ),
-                                    );
-                                  }
-                                });
+                                await Supabase.instance.client.auth.signUp(
+                                    password: _passwordController.text.trim(),
+                                    email: _emailController.text.trim());
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "Confirmation email sent successfully",
+                                      style: TextStyle(color: Colors.green),
+                                    ),
+                                    padding: EdgeInsets.all(8),
+                                  ),
+                                );
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      "${e.toString()}",
+                                      "Error in provided credentials",
                                       style: TextStyle(color: Colors.red),
                                     ),
                                     padding: EdgeInsets.all(8),
@@ -263,6 +250,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         const SizedBox(height: 15),
 
+                        const SizedBox(height: 6),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            GlassLoginScreen(),
+                                      ));
+                                },
+                                child: const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 6),
                         // Divider
                         Row(
                           children: [

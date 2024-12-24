@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iot/auth/login_screen.dart';
 import 'package:iot/providers/cart_provider.dart';
 import 'package:iot/providers/store_provider.dart';
+import 'package:iot/providers/value_provider.dart';
 import 'package:iot/screens/cart_screen.dart';
 import 'package:iot/services/database_service.dart';
 import 'package:provider/provider.dart';
@@ -135,17 +136,71 @@ class _StoreScreenState extends State<StoreScreen> {
                                   context: context,
                                   builder: (context) => AlertDialog(
                                       title: Text("Confirm"),
-                                      content: Text(
-                                        "Are you sure you want to add this item to cart?",
-                                        style: TextStyle(fontSize: 16),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(Icons.remove),
+                                                onPressed: context
+                                                            .watch<
+                                                                ValueProvider>()
+                                                            .value ==
+                                                        0
+                                                    ? null
+                                                    : () {
+                                                        context
+                                                            .read<
+                                                                ValueProvider>()
+                                                            .decrement();
+                                                      },
+                                              ),
+                                              Text(
+                                                '${context.watch<ValueProvider>().value}',
+                                                style: TextStyle(fontSize: 24),
+                                              ),
+                                              IconButton(
+                                                icon: Icon(Icons.add),
+                                                onPressed: context
+                                                            .watch<
+                                                                ValueProvider>()
+                                                            .value ==
+                                                        quant
+                                                    ? null
+                                                    : () {
+                                                        context
+                                                            .read<
+                                                                ValueProvider>()
+                                                            .increment();
+                                                      },
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            "Are you sure you want to add this item to cart?",
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                        ],
                                       ),
                                       actions: [
                                         IconButton(
                                             onPressed: () {
+                                              final value =
+                                                  Provider.of<ValueProvider>(
+                                                      context,
+                                                      listen: false);
                                               context
                                                   .read<CartProvider>()
                                                   .addItem(
-                                                      item: name, img: pic);
+                                                      item: name,
+                                                      img: pic,
+                                                      quant: value.value);
+                                              context
+                                                  .read<ValueProvider>()
+                                                  .reset();
                                               Navigator.pop(context);
                                             },
                                             icon: Icon(Icons.check)),

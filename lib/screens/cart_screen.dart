@@ -19,22 +19,27 @@ class _CartScreenState extends State<CartScreen> {
         centerTitle: true,
         elevation: 2,
       ),
-      body: context.watch<CartProvider>().item_name.isEmpty
+      body: context.watch<CartProvider>().items.isEmpty
           ? const Center(child: Text("Empty Cart"))
           : Column(
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: context.watch<CartProvider>().item_name.length,
+                    itemCount: context.watch<CartProvider>().items.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         leading: Image.network(
-                          context.watch<CartProvider>().item_img[index],
+                          context.watch<CartProvider>().items[index]
+                              ["item_img"],
                           height: 40,
                           width: 40,
                         ),
-                        title: Text(
-                            context.watch<CartProvider>().item_name[index]),
+                        title: Text(context.watch<CartProvider>().items[index]
+                            ["item_name"]),
+                        subtitle: Text(context
+                            .watch<CartProvider>()
+                            .items[index]["item_quant"]
+                            .toString()),
                         trailing: IconButton(
                           onPressed: () {
                             context

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iot/providers/bottom_nav_provider.dart';
 import 'package:iot/providers/cart_provider.dart';
 import 'package:iot/providers/store_provider.dart';
+import 'package:iot/providers/value_provider.dart';
 import 'package:iot/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => StoreProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ValueProvider(),
         )
       ],
       child: MaterialApp(
