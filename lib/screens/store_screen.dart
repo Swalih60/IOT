@@ -86,7 +86,7 @@ class _StoreScreenState extends State<StoreScreen> {
                 onTap: () async {
                   await Supabase.instance.client.auth.signOut().then((value) =>
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => GlassLoginScreen(),
+                        builder: (context) => const GlassLoginScreen(),
                       )));
                 },
               ),
@@ -135,7 +135,7 @@ class _StoreScreenState extends State<StoreScreen> {
                                 showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                      title: Text("Confirm"),
+                                      title: const Text("Confirm"),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -144,7 +144,7 @@ class _StoreScreenState extends State<StoreScreen> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               IconButton(
-                                                icon: Icon(Icons.remove),
+                                                icon: const Icon(Icons.remove),
                                                 onPressed: context
                                                             .watch<
                                                                 ValueProvider>()
@@ -160,10 +160,11 @@ class _StoreScreenState extends State<StoreScreen> {
                                               ),
                                               Text(
                                                 '${context.watch<ValueProvider>().value}',
-                                                style: TextStyle(fontSize: 24),
+                                                style: const TextStyle(
+                                                    fontSize: 24),
                                               ),
                                               IconButton(
-                                                icon: Icon(Icons.add),
+                                                icon: const Icon(Icons.add),
                                                 onPressed: context
                                                             .watch<
                                                                 ValueProvider>()
@@ -179,7 +180,7 @@ class _StoreScreenState extends State<StoreScreen> {
                                               ),
                                             ],
                                           ),
-                                          Text(
+                                          const Text(
                                             "Are you sure you want to add this item to cart?",
                                             style: TextStyle(fontSize: 16),
                                           ),
@@ -203,15 +204,15 @@ class _StoreScreenState extends State<StoreScreen> {
                                                   .reset();
                                               Navigator.pop(context);
                                             },
-                                            icon: Icon(Icons.check)),
-                                        SizedBox(
+                                            icon: const Icon(Icons.check)),
+                                        const SizedBox(
                                           width: 20,
                                         ),
                                         IconButton(
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
-                                            icon: Icon(Icons.close)),
+                                            icon: const Icon(Icons.close)),
                                       ]),
                                 );
                               },

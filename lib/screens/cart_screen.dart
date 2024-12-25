@@ -11,6 +11,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  List<Map<String, dynamic>> items = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +28,14 @@ class _CartScreenState extends State<CartScreen> {
                   child: ListView.builder(
                     itemCount: context.watch<CartProvider>().items.length,
                     itemBuilder: (context, index) {
+                      items.add({
+                        'name':
+                            Provider.of<CartProvider>(context, listen: false)
+                                .items[index]["item_name"],
+                        'quantity':
+                            Provider.of<CartProvider>(context, listen: false)
+                                .items[index]["item_quant"],
+                      });
                       return ListTile(
                         leading: Image.network(
                           context.watch<CartProvider>().items[index]
@@ -58,13 +67,15 @@ class _CartScreenState extends State<CartScreen> {
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => QrScreen(),
+                        builder: (context) => QrScreen(
+                          items: items,
+                        ),
                       ));
                     },
-                    child: const Text('Buy Now'),
                     style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 50), // Full width
+                      minimumSize: const Size(double.infinity, 50),
                     ),
+                    child: const Text('Buy Now'),
                   ),
                 ),
               ],

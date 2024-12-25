@@ -21,14 +21,14 @@ class NavScreen extends StatelessWidget {
             icon: Container(
               width: 60,
               height: 40,
-              child: Icon(
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 232, 226, 226),
+                  borderRadius: BorderRadius.circular(100)),
+              child: const Icon(
                 Icons.store,
                 color: Colors.black,
                 size: 30,
               ),
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 232, 226, 226),
-                  borderRadius: BorderRadius.circular(100)),
             ),
             label: '',
           ),
@@ -36,14 +36,14 @@ class NavScreen extends StatelessWidget {
             icon: Container(
               width: 60,
               height: 40,
-              child: Icon(
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 232, 226, 226),
+                  borderRadius: BorderRadius.circular(100)),
+              child: const Icon(
                 Icons.person,
                 color: Colors.black,
                 size: 30,
               ),
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 232, 226, 226),
-                  borderRadius: BorderRadius.circular(100)),
             ),
             label: '',
           ),

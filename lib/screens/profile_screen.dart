@@ -7,7 +7,7 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("PROFILE"),
+          title: const Text("PROFILE"),
           elevation: 5,
           centerTitle: true,
         ),
@@ -21,18 +21,18 @@ class ProfileScreen extends StatelessWidget {
                 decoration: const BoxDecoration(
                     shape: BoxShape.circle, color: Colors.purple),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text(
+              const Text(
                 "SWALIH ZAMNOON PM",
                 style: TextStyle(fontSize: 30),
               ),
-              Text(
+              const Text(
                 "CSE",
                 style: TextStyle(fontSize: 30),
               ),
-              Text(
+              const Text(
                 "S8",
                 style: TextStyle(fontSize: 30),
               ),

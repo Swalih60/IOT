@@ -1,10 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:iot/auth/login_screen.dart';
 import 'package:iot/screens/bottom_nav.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _SplashScreenState createState() => _SplashScreenState();
 }
 
@@ -21,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 3),
+      duration: const Duration(seconds: 3),
     );
 
     _productDropAnimation = Tween<double>(begin: 0, end: 150).animate(
@@ -29,11 +34,11 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Interval(0.6, 1.0)),
+      CurvedAnimation(parent: _controller, curve: const Interval(0.6, 1.0)),
     );
 
     _opacityAnimation1 = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Interval(2.0, 3.6)),
+      CurvedAnimation(parent: _controller, curve: const Interval(2.0, 3.6)),
     );
 
     _controller.forward().then((_) {
@@ -46,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
     final user = Supabase.instance.client.auth.currentUser;
 
     // Use a slight delay to ensure the animation is fully complete
-    await Future.delayed(Duration(milliseconds: 300));
+    await Future.delayed(const Duration(milliseconds: 300));
 
     if (user != null) {
       // If user is logged in, navigate to Home Screen
@@ -58,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
       // If user is not logged in, navigate to Login Screen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => GlassLoginScreen()),
+        MaterialPageRoute(builder: (context) => const GlassLoginScreen()),
       );
     }
   }
@@ -76,8 +81,7 @@ class _SplashScreenState extends State<SplashScreen>
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Vending Machine Icon
-            Positioned(
+            const Positioned(
               top: 100,
               child: Icon(
                 Icons.local_drink,
@@ -85,13 +89,12 @@ class _SplashScreenState extends State<SplashScreen>
                 color: Colors.blue,
               ),
             ),
-            // Product dropping animation
             AnimatedBuilder(
               animation: _productDropAnimation,
               builder: (context, child) {
                 return Positioned(
                   top: 150 + _productDropAnimation.value,
-                  child: Icon(
+                  child: const Icon(
                     Icons.fastfood,
                     size: 50,
                     color: Colors.orange,
@@ -106,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen>
                   bottom: 260,
                   child: Opacity(
                     opacity: _opacityAnimation.value,
-                    child: Text(
+                    child: const Text(
                       'Your Smart Vending Solution',
                       style: TextStyle(
                         fontSize: 24,
@@ -118,8 +121,7 @@ class _SplashScreenState extends State<SplashScreen>
                 );
               },
             ),
-            // Basket Icon
-            Positioned(
+            const Positioned(
               bottom: 100,
               child: Icon(
                 Icons.shopping_basket,
@@ -127,7 +129,6 @@ class _SplashScreenState extends State<SplashScreen>
                 color: Colors.green,
               ),
             ),
-            // App Name (fades in)
             AnimatedBuilder(
               animation: _opacityAnimation,
               builder: (context, child) {
@@ -135,7 +136,7 @@ class _SplashScreenState extends State<SplashScreen>
                   bottom: 40,
                   child: Opacity(
                     opacity: _opacityAnimation.value,
-                    child: Text(
+                    child: const Text(
                       'I-VEND',
                       style: TextStyle(
                         fontSize: 24,
