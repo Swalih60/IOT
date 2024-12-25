@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iot/auth/signup_screen.dart';
+import 'package:iot/screens/admin_screen.dart';
 import 'package:iot/screens/bottom_nav.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -160,7 +161,15 @@ class _GlassLoginScreenState extends State<GlassLoginScreen> {
                                       password: _passwordController.text.trim(),
                                       email: _emailController.text.trim())
                                   .then((value) {
-                                if (value.session != null &&
+                                if (value.user!.id ==
+                                    "6cf67ce9-cd2e-473e-bf94-4e491efff6f8") {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AdminScreen(),
+                                      ));
+                                } else if (value.session != null &&
                                     value.user != null) {
                                   Navigator.pushReplacement(
                                       context,

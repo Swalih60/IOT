@@ -3,8 +3,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class Storage {
   final storage = Supabase.instance.client.storage;
 
-  Future<void> uploadPic(
-      {required img, required String uid, required String filename}) async {
-    await storage.from("item_bucket").upload('$uid/$filename/', img);
+  Future<String> uploadPic({required img, required String filename}) async {
+    await storage.from("item_bucket").upload('ADMIN/$filename', img);
+
+    final publicUrl =
+        storage.from("item_bucket").getPublicUrl('ADMIN/$filename');
+    return publicUrl;
   }
 }

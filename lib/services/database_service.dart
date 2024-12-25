@@ -10,7 +10,7 @@ class SupaBase {
       required int price,
       required String pic}) async {
     try {
-      return await database.from("Items").update({
+      return await database.from("items").update({
         "item": name,
         "quantity": quantity,
         "pic": pic,

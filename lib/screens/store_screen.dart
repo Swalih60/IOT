@@ -84,10 +84,10 @@ class _StoreScreenState extends State<StoreScreen> {
                   size: 30,
                 ),
                 onTap: () async {
-                  await Supabase.instance.client.auth.signOut();
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => GlassLoginScreen(),
-                  ));
+                  await Supabase.instance.client.auth.signOut().then((value) =>
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => GlassLoginScreen(),
+                      )));
                 },
               ),
             ),
