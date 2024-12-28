@@ -39,6 +39,11 @@ class _StoreScreenState extends State<StoreScreen> {
     // final List<String> price = ["5", "30", "10", "50", "10", "50"];
   }
 
+  bool check(String name) {
+    final it = context.watch<CartProvider>().items;
+    return !it.any((i) => i["item_name"] == name);
+  }
+
   Future<void> _loadItems() async {
     try {
       for (int i = 1; i <= 6; i++) {
@@ -131,91 +136,98 @@ class _StoreScreenState extends State<StoreScreen> {
                             height: 10,
                           ),
                           ElevatedButton(
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                      title: const Text("Confirm"),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
+                              onPressed: check(item["item"])
+                                  ? () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                            title: const Text("Confirm"),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    IconButton(
+                                                      icon: const Icon(
+                                                          Icons.remove),
+                                                      onPressed: context
+                                                                  .watch<
+                                                                      ValueProvider>()
+                                                                  .value ==
+                                                              0
+                                                          ? null
+                                                          : () {
+                                                              context
+                                                                  .read<
+                                                                      ValueProvider>()
+                                                                  .decrement();
+                                                            },
+                                                    ),
+                                                    Text(
+                                                      '${context.watch<ValueProvider>().value}',
+                                                      style: const TextStyle(
+                                                          fontSize: 24),
+                                                    ),
+                                                    IconButton(
+                                                      icon:
+                                                          const Icon(Icons.add),
+                                                      onPressed: context
+                                                                  .watch<
+                                                                      ValueProvider>()
+                                                                  .value ==
+                                                              quant
+                                                          ? null
+                                                          : () {
+                                                              context
+                                                                  .read<
+                                                                      ValueProvider>()
+                                                                  .increment();
+                                                            },
+                                                    ),
+                                                  ],
+                                                ),
+                                                const Text(
+                                                  "Are you sure you want to add this item to cart?",
+                                                  style:
+                                                      TextStyle(fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                            actions: [
                                               IconButton(
-                                                icon: const Icon(Icons.remove),
-                                                onPressed: context
-                                                            .watch<
-                                                                ValueProvider>()
-                                                            .value ==
-                                                        0
-                                                    ? null
-                                                    : () {
-                                                        context
-                                                            .read<
-                                                                ValueProvider>()
-                                                            .decrement();
-                                                      },
-                                              ),
-                                              Text(
-                                                '${context.watch<ValueProvider>().value}',
-                                                style: const TextStyle(
-                                                    fontSize: 24),
+                                                  onPressed: () {
+                                                    final value = Provider.of<
+                                                            ValueProvider>(
+                                                        context,
+                                                        listen: false);
+                                                    context
+                                                        .read<CartProvider>()
+                                                        .addItem(
+                                                            item: name,
+                                                            img: pic,
+                                                            quant: value.value);
+                                                    context
+                                                        .read<ValueProvider>()
+                                                        .reset();
+                                                    Navigator.pop(context);
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.check)),
+                                              const SizedBox(
+                                                width: 20,
                                               ),
                                               IconButton(
-                                                icon: const Icon(Icons.add),
-                                                onPressed: context
-                                                            .watch<
-                                                                ValueProvider>()
-                                                            .value ==
-                                                        quant
-                                                    ? null
-                                                    : () {
-                                                        context
-                                                            .read<
-                                                                ValueProvider>()
-                                                            .increment();
-                                                      },
-                                              ),
-                                            ],
-                                          ),
-                                          const Text(
-                                            "Are you sure you want to add this item to cart?",
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                        ],
-                                      ),
-                                      actions: [
-                                        IconButton(
-                                            onPressed: () {
-                                              final value =
-                                                  Provider.of<ValueProvider>(
-                                                      context,
-                                                      listen: false);
-                                              context
-                                                  .read<CartProvider>()
-                                                  .addItem(
-                                                      item: name,
-                                                      img: pic,
-                                                      quant: value.value);
-                                              context
-                                                  .read<ValueProvider>()
-                                                  .reset();
-                                              Navigator.pop(context);
-                                            },
-                                            icon: const Icon(Icons.check)),
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                        IconButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            icon: const Icon(Icons.close)),
-                                      ]),
-                                );
-                              },
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  icon:
+                                                      const Icon(Icons.close)),
+                                            ]),
+                                      );
+                                    }
+                                  : null,
                               child: const Icon(Icons.shopping_cart))
                         ],
                       ),

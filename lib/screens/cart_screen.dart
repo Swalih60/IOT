@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iot/providers/cart_provider.dart';
 import 'package:iot/screens/qrcode_screen.dart';
+import 'package:iot/services/database_service.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
@@ -11,7 +12,29 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  SupaBase db = SupaBase();
   List<Map<String, dynamic>> items = [];
+
+  Future<void> _processOrder() async {
+    try {
+      // Process each item sequentially
+      for (var item in items) {
+        await db.decrementQuant(
+          name: item["name"] ?? "item_name",
+          decrementValue: int.tryParse(item["quantity"].toString()) ?? 0,
+        );
+      }
+
+      if (mounted) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => QrScreen(items: items),
+        ));
+      }
+    } catch (e) {
+      print('Error processing order: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,27 +51,26 @@ class _CartScreenState extends State<CartScreen> {
                   child: ListView.builder(
                     itemCount: context.watch<CartProvider>().items.length,
                     itemBuilder: (context, index) {
-                      items.add({
-                        'name':
-                            Provider.of<CartProvider>(context, listen: false)
-                                .items[index]["item_name"],
-                        'quantity':
-                            Provider.of<CartProvider>(context, listen: false)
-                                .items[index]["item_quant"],
-                      });
+                      final cartItem =
+                          context.watch<CartProvider>().items[index];
+                      // Update items list for each rebuild
+                      items = context
+                          .watch<CartProvider>()
+                          .items
+                          .map((item) => {
+                                'name': item["item_name"],
+                                'quantity': item["item_quant"],
+                              })
+                          .toList();
+
                       return ListTile(
                         leading: Image.network(
-                          context.watch<CartProvider>().items[index]
-                              ["item_img"],
+                          cartItem["item_img"],
                           height: 40,
                           width: 40,
                         ),
-                        title: Text(context.watch<CartProvider>().items[index]
-                            ["item_name"]),
-                        subtitle: Text(context
-                            .watch<CartProvider>()
-                            .items[index]["item_quant"]
-                            .toString()),
+                        title: Text(cartItem["item_name"]),
+                        subtitle: Text(cartItem["item_quant"].toString()),
                         trailing: IconButton(
                           onPressed: () {
                             context
@@ -66,11 +88,27 @@ class _CartScreenState extends State<CartScreen> {
                   padding: const EdgeInsets.all(10.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => QrScreen(
-                          items: items,
-                        ),
-                      ));
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Confirm Order"),
+                            actions: [
+                              IconButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                icon: const Icon(Icons.cancel),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  _processOrder();
+                                },
+                                icon: const Icon(Icons.check),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50),
