@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iot/providers/cart_provider.dart';
-import 'package:iot/screens/qrcode_screen.dart';
+import 'package:iot/screens/payment_screen.dart';
 import 'package:iot/services/database_service.dart';
 import 'package:provider/provider.dart';
 
@@ -16,9 +16,12 @@ class _CartScreenState extends State<CartScreen> {
   List<Map<String, dynamic>> items = [];
 
   Future<void> _processOrder() async {
+    double amount = 0;
+
     try {
       // Process each item sequentially
       for (var item in items) {
+        amount += item["price"];
         await db.decrementQuant(
           name: item["name"] ?? "item_name",
           decrementValue: int.tryParse(item["quantity"].toString()) ?? 0,
@@ -27,7 +30,10 @@ class _CartScreenState extends State<CartScreen> {
 
       if (mounted) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => QrScreen(items: items),
+          builder: (context) => UPIPaymentScreen(
+            items: items,
+            amount: amount,
+          ),
         ));
       }
     } catch (e) {
@@ -60,6 +66,7 @@ class _CartScreenState extends State<CartScreen> {
                           .map((item) => {
                                 'name': item["item_name"],
                                 'quantity': item["item_quant"],
+                                'price': item["item_price"],
                               })
                           .toList();
 

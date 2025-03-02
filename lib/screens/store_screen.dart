@@ -107,7 +107,7 @@ class _StoreScreenState extends State<StoreScreen> {
                     crossAxisCount: 2,
                     mainAxisSpacing: 20,
                     crossAxisSpacing: 20,
-                    mainAxisExtent: 260),
+                    mainAxisExtent: 300),
                 itemBuilder: (context, index) {
                   final item = context.watch<StoreProvider>().items[index];
                   final String name = item["item"] ?? "unknown";
@@ -207,7 +207,8 @@ class _StoreScreenState extends State<StoreScreen> {
                                                         .addItem(
                                                             item: name,
                                                             img: pic,
-                                                            quant: value.value);
+                                                            quant: value.value,
+                                                            price: price);
                                                     context
                                                         .read<ValueProvider>()
                                                         .reset();
@@ -228,7 +229,10 @@ class _StoreScreenState extends State<StoreScreen> {
                                       );
                                     }
                                   : null,
-                              child: const Icon(Icons.shopping_cart))
+                              child: const Icon(Icons.shopping_cart)),
+                          const SizedBox(
+                            height: 50,
+                          )
                         ],
                       ),
                     ),

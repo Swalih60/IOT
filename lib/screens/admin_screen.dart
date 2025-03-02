@@ -95,7 +95,6 @@ class _AdminScreenState extends State<AdminScreen> {
                   final int quant = item["quantity"] ?? 0;
                   final String pic = item["pic"] ?? "unknown";
                   final int price = item["price"] ?? 0;
-                  bool vis = quant > 0;
 
                   TextEditingController t1 = TextEditingController(text: name);
 
@@ -104,107 +103,104 @@ class _AdminScreenState extends State<AdminScreen> {
                   TextEditingController t3 =
                       TextEditingController(text: "\$ : $price");
 
-                  return Offstage(
-                    offstage: !vis,
-                    child: Card(
-                      elevation: 20,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                _pickImage(ImageSource.gallery);
-                              },
-                              child: Image.network(
-                                pic,
-                                width: 100,
-                                height: 100,
-                              ),
+                  return Card(
+                    elevation: 20,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              _pickImage(ImageSource.gallery);
+                            },
+                            child: Image.network(
+                              pic,
+                              width: 100,
+                              height: 100,
                             ),
                           ),
-                          SizedBox(
-                            height: 30,
-                            width: 100,
-                            child: TextField(
-                              textAlignVertical: TextAlignVertical.center,
-                              controller: t1,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              )),
-                            ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                          width: 100,
+                          child: TextField(
+                            textAlignVertical: TextAlignVertical.center,
+                            controller: t1,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
                           ),
-                          SizedBox(
-                            height: 30,
-                            width: 100,
-                            child: TextField(
-                              controller: t2,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              )),
-                            ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                          width: 100,
+                          child: TextField(
+                            controller: t2,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
                           ),
-                          SizedBox(
-                            height: 30,
-                            width: 100,
-                            child: TextField(
-                              textAlignVertical: TextAlignVertical.center,
-                              controller: t3,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              )),
-                            ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                          width: 100,
+                          child: TextField(
+                            textAlignVertical: TextAlignVertical.center,
+                            controller: t3,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
                           ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              try {
-                                String publicUrl;
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            try {
+                              String publicUrl;
 
-                                if (_image == null) {
-                                  publicUrl = pic;
-                                } else {
-                                  publicUrl = await st.uploadPic(
-                                    img: _image,
-                                    filename: index.toString(),
-                                  );
-                                }
-
-                                await db.updateItem(
-                                  id: (index + 1).toString(),
-                                  name: t1.text,
-                                  quantity:
-                                      int.parse(t2.text.split(':').last.trim()),
-                                  price:
-                                      int.parse(t3.text.split(':').last.trim()),
-                                  pic: publicUrl,
-                                );
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Item updated successfully."),
-                                    backgroundColor: Colors.green,
-                                  ),
-                                );
-                              } catch (e) {
-                                print("Error updating item: $e");
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Error: $e"),
-                                    backgroundColor: Colors.red,
-                                  ),
+                              if (_image == null) {
+                                publicUrl = pic;
+                              } else {
+                                publicUrl = await st.uploadPic(
+                                  img: _image,
+                                  filename: index.toString(),
                                 );
                               }
-                            },
-                            child: const Text("Update"),
-                          ),
-                        ],
-                      ),
+
+                              await db.updateItem(
+                                id: (index + 1).toString(),
+                                name: t1.text,
+                                quantity:
+                                    int.parse(t2.text.split(':').last.trim()),
+                                price:
+                                    int.parse(t3.text.split(':').last.trim()),
+                                pic: publicUrl,
+                              );
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Item updated successfully."),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            } catch (e) {
+                              print("Error updating item: $e");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Error: $e"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          },
+                          child: const Text("Update"),
+                        ),
+                      ],
                     ),
                   );
                 },

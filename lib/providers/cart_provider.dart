@@ -8,7 +8,10 @@ class CartProvider extends ChangeNotifier {
   List<Map<String, dynamic>> items = [];
 
   void addItem(
-      {required String item, required String img, required int quant}) {
+      {required String item,
+      required String img,
+      required int quant,
+      required int price}) {
     // item_name.add(item);
     // item_img.add(img);
     // item_quant.add(quant);
@@ -16,6 +19,7 @@ class CartProvider extends ChangeNotifier {
       "item_name": item,
       "item_img": img,
       "item_quant": quant,
+      "item_price": price,
     });
   }
 

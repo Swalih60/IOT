@@ -14,54 +14,56 @@ class NavScreen extends StatelessWidget {
     return Scaffold(
       extendBody: true,
       body: list[context.watch<BottomProvider>().currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.transparent,
-        items: [
-          BottomNavigationBarItem(
-            icon: Container(
-              width: 60,
-              height: 40,
-              decoration: BoxDecoration(
+      bottomNavigationBar: Container(
+        height: 80,
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+              onTap: () => context.read<BottomProvider>().changeIndex(index: 0),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width:
+                    context.watch<BottomProvider>().currentIndex == 0 ? 70 : 60,
+                height:
+                    context.watch<BottomProvider>().currentIndex == 0 ? 50 : 40,
+                decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 232, 226, 226),
-                  borderRadius: BorderRadius.circular(100)),
-              child: const Icon(
-                Icons.store,
-                color: Colors.black,
-                size: 30,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Icon(
+                  Icons.store,
+                  color: Colors.black,
+                  size: context.watch<BottomProvider>().currentIndex == 0
+                      ? 35
+                      : 30,
+                ),
               ),
             ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Container(
-              width: 60,
-              height: 40,
-              decoration: BoxDecoration(
+            GestureDetector(
+              onTap: () => context.read<BottomProvider>().changeIndex(index: 1),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width:
+                    context.watch<BottomProvider>().currentIndex == 1 ? 70 : 60,
+                height:
+                    context.watch<BottomProvider>().currentIndex == 1 ? 50 : 40,
+                decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 232, 226, 226),
-                  borderRadius: BorderRadius.circular(100)),
-              child: const Icon(
-                Icons.person,
-                color: Colors.black,
-                size: 30,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Icon(
+                  Icons.person,
+                  color: Colors.black,
+                  size: context.watch<BottomProvider>().currentIndex == 1
+                      ? 35
+                      : 30,
+                ),
               ),
             ),
-            label: '',
-          ),
-        ],
-        selectedItemColor: Colors.purple,
-        showSelectedLabels: true,
-        showUnselectedLabels: false,
-        selectedIconTheme: const IconThemeData(
-          size: 50,
+          ],
         ),
-        unselectedIconTheme: const IconThemeData(
-          size: 30,
-        ),
-        elevation: 0,
-        currentIndex: context.watch<BottomProvider>().currentIndex,
-        onTap: (value) {
-          context.read<BottomProvider>().changeIndex(index: value);
-        },
       ),
     );
   }
