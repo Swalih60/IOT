@@ -30,7 +30,7 @@ class _CartScreenState extends State<CartScreen> {
 
       if (mounted) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => UPIPaymentScreen(
+          builder: (context) => RazorpayPaymentScreen(
             items: items,
             amount: amount,
           ),
