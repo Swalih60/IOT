@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class QrScreen extends StatefulWidget {
   const QrScreen({
@@ -20,17 +22,46 @@ class _QrScreenState extends State<QrScreen> {
   late Timer _timer;
   int _start = 60;
   bool _isExpired = false;
+  late String transactionCode;
+  final SupabaseClient supabase = Supabase.instance.client;
 
   @override
   void initState() {
     super.initState();
-    qrData = _generateQrData(widget.items);
-    _startTimer();
+    _generateTransactionCode();
+  }
+
+  Future<void> _generateTransactionCode() async {
+    // Generate a random 12-character alphanumeric code
+    String code;
+    bool isUnique = false;
+
+    while (!isUnique) {
+      code = '';
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      final random = Random();
+
+      for (var i = 0; i < 12; i++) {
+        code += chars[random.nextInt(chars.length)];
+      }
+
+      // Check if code exists in database
+      final result = await supabase
+          .from('transactions')
+          .select()
+          .eq('transaction_code', code)
+          .single();
+    }
   }
 
   @override
   void dispose() {
     _timer.cancel();
+    // Mark as expired if not used
+    if (!_isExpired) {
+      supabase.from('transactions').update({'status': 'EXPIRED'}).eq(
+          'transaction_code', transactionCode);
+    }
     super.dispose();
   }
 
@@ -50,12 +81,16 @@ class _QrScreenState extends State<QrScreen> {
   }
 
   String _generateQrData(List items) {
+    // Add transaction code at the beginning
+    String data = '$transactionCode|';
+
     List<String> itemDetails = items.map((item) {
       String name = item['name'] ?? 'Unknown';
       int quantity = item['quantity'] ?? 0;
       return '$name $quantity';
     }).toList();
-    return itemDetails.join(', ');
+
+    return data + itemDetails.join(', ');
   }
 
   @override
