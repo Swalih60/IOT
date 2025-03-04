@@ -64,7 +64,7 @@ class _StoreScreenState extends State<StoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("SHOP"),
+          title: const Text("I-VEND"),
           centerTitle: true,
           elevation: 20,
           actions: [

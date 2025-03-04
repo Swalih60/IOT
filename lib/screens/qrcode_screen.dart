@@ -20,7 +20,7 @@ class QrScreen extends StatefulWidget {
 class _QrScreenState extends State<QrScreen> {
   late String qrData;
   late Timer _timer;
-  int _start = 60;
+  int _start = 43200;
   bool _isExpired = false;
   late String transactionCode;
   final SupabaseClient supabase = Supabase.instance.client;
@@ -119,7 +119,9 @@ class _QrScreenState extends State<QrScreen> {
               height: 20,
             ),
             Text(
-              _isExpired ? "QR Code Expired" : "Time Remaining: $_start s",
+              _isExpired
+                  ? "QR Code Expired"
+                  : "Time Remaining: ${(_start / 3600).floor()}h ${((_start % 3600) / 60).floor()}m",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,

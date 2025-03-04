@@ -8,7 +8,7 @@ import 'package:iot/screens/bottom_nav.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GlassLoginScreen extends StatefulWidget {
-  const GlassLoginScreen({Key? key}) : super(key: key);
+  const GlassLoginScreen({super.key});
 
   @override
   _GlassLoginScreenState createState() => _GlassLoginScreenState();
@@ -162,7 +162,7 @@ class _GlassLoginScreenState extends State<GlassLoginScreen> {
                                       email: _emailController.text.trim())
                                   .then((value) {
                                 if (value.user!.id ==
-                                    "5dfa1a4b-446e-4a22-9624-a647aae3f59b") {
+                                    "c3e985f6-7d08-49d1-b905-fcec10d8e433") {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -192,10 +192,10 @@ class _GlassLoginScreenState extends State<GlassLoginScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                    "${e.toString().split(':').last.trim()}",
-                                    style: TextStyle(color: Colors.red),
+                                    e.toString().split(':').last.trim(),
+                                    style: const TextStyle(color: Colors.red),
                                   ),
-                                  padding: EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(8),
                                 ),
                               );
                             }
@@ -224,7 +224,8 @@ class _GlassLoginScreenState extends State<GlassLoginScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => SignUpScreen(),
+                                      builder: (context) =>
+                                          const SignUpScreen(),
                                     ));
                               },
                               child: const Text(
