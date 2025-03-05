@@ -54,7 +54,6 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
   }
 
   Future<void> _handlePaymentError(PaymentFailureResponse response) async {
-    _navigateToQrScreen();
     _showSnackBar("Payment Failed: ${response.message ?? 'Error occurred'}");
     setState(() {
       _isProcessing = false;

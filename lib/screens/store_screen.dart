@@ -91,7 +91,7 @@ class _StoreScreenState extends State<StoreScreen> {
             ? const Center(child: CircularProgressIndicator())
             : GridView.builder(
                 padding: const EdgeInsets.all(10),
-                itemCount: 6,
+                itemCount: context.watch<StoreProvider>().items.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 20,

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:iot/providers/cart_provider.dart';
+import 'package:iot/screens/store_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -94,76 +95,94 @@ class _QrScreenState extends State<QrScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // QR Code
-              QrImageView(
-                backgroundColor: Colors.white,
-                data: qrData,
-                version: QrVersions.auto,
-                size: 300.0,
-              ),
-              const SizedBox(height: 20),
+      body: Stack(
+        children: [
+          // Custom Back Button
+          Positioned(
+            top: 40,
+            left: 20,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white, size: 36),
+              onPressed: () {
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const StoreScreen(),
+                )); // Navigate to store screen
+              },
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // QR Code
+                  QrImageView(
+                    backgroundColor: Colors.white,
+                    data: qrData,
+                    version: QrVersions.auto,
+                    size: 300.0,
+                  ),
+                  const SizedBox(height: 20),
 
-              // Transaction Code
-              // Text(
-              //   'Transaction Code: $transactionCode',
-              //   style:
-              //       const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              // ),
-              const SizedBox(height: 20),
+                  // Transaction Code
+                  // Text(
+                  //   'Transaction Code: $transactionCode',
+                  //   style:
+                  //       const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  // ),
+                  const SizedBox(height: 20),
 
-              // Items List
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Order Details:',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  // Items List
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(height: 10),
-                    ...widget.items.map((item) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('${item['name']}'),
-                              Text('x${item['quantity']}'),
-                            ],
-                          ),
-                        )),
-                    const Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Total Amount:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          'Order Details:',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          '₹${widget.amount.toStringAsFixed(2)}',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        const SizedBox(height: 10),
+                        ...widget.items.map((item) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('${item['name']}'),
+                                  Text('x${item['quantity']}'),
+                                ],
+                              ),
+                            )),
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Total Amount:',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              '₹${widget.amount.toStringAsFixed(2)}',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
