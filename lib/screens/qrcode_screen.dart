@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:iot/providers/cart_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -20,7 +22,7 @@ class QrScreen extends StatefulWidget {
 }
 
 class _QrScreenState extends State<QrScreen> {
-  late String qrData;
+  late String qrData = " ";
   late String transactionCode;
   final bool _isExpired = false;
   final SupabaseClient supabase = Supabase.instance.client;
@@ -29,6 +31,8 @@ class _QrScreenState extends State<QrScreen> {
   void initState() {
     super.initState();
     _generateTransactionCode();
+    // Clear the cart after successful payment
+    context.read<CartProvider>().clearCart();
   }
 
   Future<void> _generateTransactionCode() async {

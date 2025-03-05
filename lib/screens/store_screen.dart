@@ -22,21 +22,6 @@ class _StoreScreenState extends State<StoreScreen> {
   void initState() {
     super.initState();
     _loadItems();
-
-    // final List<String> urls = [
-    //   "https://assets.ajio.com/medias/sys_master/root/20240807/8Szc/66b378076f60443f31f3a482/-473Wx593H-462760846-black-MODEL.jpg",
-    //   "https://images.jdmagicbox.com/quickquotes/images_main/classmate-notebook-240-x-180-120-pages-unruled-back-pressed-center-stapled-164867252-lgesq.jpg",
-    //   "https://www.bigbasket.com/media/uploads/p/l/102745_15-lays-potato-chips-american-style-cream-onion-flavour.jpg",
-    //   "https://www.bigbasket.com/media/uploads/p/l/40094178_9-7-up-soft-drink.jpg",
-    //   "https://www.bigbasket.com/media/uploads/p/l/102745_15-lays-potato-chips-american-style-cream-onion-flavour.jpg",
-    //   "https://www.bigbasket.com/media/uploads/p/l/40094178_9-7-up-soft-drink.jpg",
-    // ];
-
-    // final List<String> names = ["PEN", "BOOK", "CHIPS", "7-UP", "CHIPS", "7-UP"];
-
-    // final List<String> quant = ["4", "7", "2", "4", "2", "0"];
-
-    // final List<String> price = ["5", "30", "10", "50", "10", "50"];
   }
 
   bool check(String name) {
@@ -46,6 +31,8 @@ class _StoreScreenState extends State<StoreScreen> {
 
   Future<void> _loadItems() async {
     try {
+      context.read<StoreProvider>().clearItems();
+
       for (int i = 1; i <= 6; i++) {
         final item = await db.readItem(id: i);
         if (item != null) {
@@ -63,42 +50,44 @@ class _StoreScreenState extends State<StoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("I-VEND"),
-          centerTitle: true,
-          elevation: 20,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                child: const Icon(
-                  Icons.shopping_cart,
-                  size: 30,
-                ),
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const CartScreen()));
-                },
+      appBar: AppBar(
+        title: const Text("I-VEND"),
+        centerTitle: true,
+        elevation: 20,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: GestureDetector(
+              child: const Icon(
+                Icons.shopping_cart,
+                size: 30,
               ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const CartScreen()));
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: GestureDetector(
-                child: const Icon(
-                  Icons.logout,
-                  size: 30,
-                ),
-                onTap: () async {
-                  await Supabase.instance.client.auth.signOut().then((value) =>
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const GlassLoginScreen(),
-                      )));
-                },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: GestureDetector(
+              child: const Icon(
+                Icons.logout,
+                size: 30,
               ),
+              onTap: () async {
+                await Supabase.instance.client.auth.signOut().then((value) =>
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const GlassLoginScreen(),
+                    )));
+              },
             ),
-          ],
-        ),
-        body: context.watch<StoreProvider>().loading
+          ),
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: _loadItems,
+        child: context.watch<StoreProvider>().loading
             ? const Center(child: CircularProgressIndicator())
             : GridView.builder(
                 padding: const EdgeInsets.all(10),
@@ -238,6 +227,8 @@ class _StoreScreenState extends State<StoreScreen> {
                     ),
                   );
                 },
-              ));
+              ),
+      ),
+    );
   }
 }

@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 
 class CartProvider extends ChangeNotifier {
-  // List item_name = [];
-  // List item_img = [];
-  // List item_quant = [];
+  final List<Map<String, dynamic>> _items = [];
 
-  List<Map<String, dynamic>> items = [];
+  List<Map<String, dynamic>> get items => _items;
 
-  void addItem(
-      {required String item,
-      required String img,
-      required int quant,
-      required int price}) {
-    // item_name.add(item);
-    // item_img.add(img);
-    // item_quant.add(quant);
-    items.add({
+  void addItem({
+    required String item,
+    required String img,
+    required int quant,
+    required int price,
+  }) {
+    _items.add({
       "item_name": item,
       "item_img": img,
       "item_quant": quant,
       "item_price": price,
     });
+    notifyListeners();
   }
 
   void removeItem({required int index}) {
-    // item_name.removeAt(index);
-    // item_img.removeAt(index);
-    // item_quant.removeAt(index);
-    items.removeAt(index);
+    _items.removeAt(index);
+    notifyListeners();
+  }
+
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
   }
 }
