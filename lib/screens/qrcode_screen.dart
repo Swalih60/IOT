@@ -9,9 +9,11 @@ class QrScreen extends StatefulWidget {
   const QrScreen({
     super.key,
     required this.items,
+    required this.amount,
   });
 
   final List items;
+  final double amount;
 
   @override
   State<QrScreen> createState() => _QrScreenState();
@@ -19,10 +21,8 @@ class QrScreen extends StatefulWidget {
 
 class _QrScreenState extends State<QrScreen> {
   late String qrData;
-  late Timer _timer;
-  int _start = 43200;
-  bool _isExpired = false;
   late String transactionCode;
+  final bool _isExpired = false;
   final SupabaseClient supabase = Supabase.instance.client;
 
   @override
@@ -45,39 +45,32 @@ class _QrScreenState extends State<QrScreen> {
         code += chars[random.nextInt(chars.length)];
       }
 
-      // Check if code exists in database
-      final result = await supabase
-          .from('transactions')
-          .select()
-          .eq('transaction_code', code)
-          .single();
+      try {
+        // Check if code exists in database
+        await supabase
+            .from('transactions')
+            .select()
+            .eq('transaction_code', code)
+            .single();
+      } catch (e) {
+        // If no record found (throws error), the code is unique
+        isUnique = true;
+        transactionCode = code;
+        qrData = _generateQrData(widget.items);
+        setState(() {}); // Update the UI with the new QR code
+        break;
+      }
     }
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     // Mark as expired if not used
     if (!_isExpired) {
       supabase.from('transactions').update({'status': 'EXPIRED'}).eq(
           'transaction_code', transactionCode);
     }
     super.dispose();
-  }
-
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_start == 0) {
-        setState(() {
-          _isExpired = true;
-        });
-        _timer.cancel();
-      } else {
-        setState(() {
-          _start--;
-        });
-      }
-    });
   }
 
   String _generateQrData(List items) {
@@ -96,39 +89,75 @@ class _QrScreenState extends State<QrScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                QrImageView(
-                  data: qrData,
-                  size: 300,
-                ),
-                if (_isExpired)
-                  const Icon(
-                    Icons.cancel,
-                    color: Colors.red,
-                    size: 300,
-                  ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              _isExpired
-                  ? "QR Code Expired"
-                  : "Time Remaining: ${(_start / 3600).floor()}h ${((_start % 3600) / 60).floor()}m",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: _isExpired ? Colors.red : Colors.black,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // QR Code
+              QrImageView(
+                backgroundColor: Colors.white,
+                data: qrData,
+                version: QrVersions.auto,
+                size: 300.0,
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+
+              // Transaction Code
+              // Text(
+              //   'Transaction Code: $transactionCode',
+              //   style:
+              //       const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              // ),
+              const SizedBox(height: 20),
+
+              // Items List
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Order Details:',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    ...widget.items.map((item) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('${item['name']}'),
+                              Text('x${item['quantity']}'),
+                            ],
+                          ),
+                        )),
+                    const Divider(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Total Amount:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '₹${widget.amount.toStringAsFixed(2)}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

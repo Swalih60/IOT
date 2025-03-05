@@ -22,10 +22,6 @@ class _CartScreenState extends State<CartScreen> {
       // Process each item sequentially
       for (var item in items) {
         amount += item["price"];
-        await db.decrementQuant(
-          name: item["name"] ?? "item_name",
-          decrementValue: int.tryParse(item["quantity"].toString()) ?? 0,
-        );
       }
 
       if (mounted) {

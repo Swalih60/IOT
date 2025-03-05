@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iot/screens/qrcode_screen.dart';
+import 'package:iot/services/database_service.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayPaymentScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
   late Razorpay _razorpay;
   bool _isProcessing = false;
 
+  SupaBase db = SupaBase();
   @override
   void initState() {
     super.initState();
@@ -40,12 +42,19 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
     );
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  Future<void> _handlePaymentSuccess(PaymentSuccessResponse response) async {
     _showSnackBar("Payment Successful: ${response.paymentId}");
+    for (var item in widget.items) {
+      await db.decrementQuant(
+        name: item["name"] ?? "item_name",
+        decrementValue: int.tryParse(item["quantity"].toString()) ?? 0,
+      );
+    }
     _navigateToQrScreen();
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
+    _navigateToQrScreen();
     _showSnackBar("Payment Failed: ${response.message ?? 'Error occurred'}");
     setState(() {
       _isProcessing = false;
@@ -66,14 +75,20 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
       _isProcessing = true;
     });
 
+    // Create description from items list
+    String description = widget.items
+        .map((item) => '${item['name']} x${item['quantity']}')
+        .join(', ');
+    description += '\nTotal Amount: ₹${widget.amount.toStringAsFixed(2)}';
+
     // Amount should be in paise (multiply by 100)
     int amountInPaise = (widget.amount * 100).toInt();
 
     var options = {
       'key': 'rzp_test_Fg3mWibuyZLlns', // Replace with your actual key
       'amount': amountInPaise,
-      'name': 'Your Store Name', // Replace with your store name
-      'description': 'Payment for items',
+      'name': 'I-VEND', // Replace with your store name
+      'description': description,
       'prefill': {
         'contact': '', // Optional: Prefill customer phone
         'email': '', // Optional: Prefill customer email
@@ -98,7 +113,10 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => QrScreen(items: widget.items),
+        builder: (context) => QrScreen(
+          items: widget.items,
+          amount: widget.amount,
+        ),
       ),
     );
   }
