@@ -83,8 +83,9 @@ class _QrScreenState extends State<QrScreen> {
 
     List<String> itemDetails = items.map((item) {
       String name = item['name'] ?? 'Unknown';
+      String position = item['pos'] ?? 'Unknown';
       int quantity = item['quantity'] ?? 0;
-      return '$name $quantity';
+      return '$position $quantity';
     }).toList();
 
     return data + itemDetails.join(', ');

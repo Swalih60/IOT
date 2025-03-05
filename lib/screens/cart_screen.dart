@@ -60,6 +60,7 @@ class _CartScreenState extends State<CartScreen> {
                           .watch<CartProvider>()
                           .items
                           .map((item) => {
+                                'pos': item["item_pos"],
                                 'name': item["item_name"],
                                 'quantity': item["item_quant"],
                                 'price': item["item_price"],

@@ -104,6 +104,15 @@ class _StoreScreenState extends State<StoreScreen> {
                   final String pic = item["pic"] ?? "unknown";
                   final int price = item["price"] ?? 0;
                   bool vis = quant > 0;
+
+                  // Generate position dynamically (A1, A2, B1, B2, C1, C2, ...)
+                  int row = index ~/ 2; // Determine row (0, 1, 2,...)
+                  int col = index % 2; // Determine column (0 or 1)
+                  String rowLetter =
+                      String.fromCharCode(65 + row); // Convert to A, B, C...
+                  String position =
+                      "$rowLetter${col + 1}"; // Combine row and column
+
                   return Offstage(
                     offstage: !vis,
                     child: Card(
@@ -197,7 +206,8 @@ class _StoreScreenState extends State<StoreScreen> {
                                                             item: name,
                                                             img: pic,
                                                             quant: value.value,
-                                                            price: price);
+                                                            price: price,
+                                                            pos: position);
                                                     context
                                                         .read<ValueProvider>()
                                                         .reset();

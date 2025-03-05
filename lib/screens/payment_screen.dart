@@ -54,12 +54,6 @@ class _RazorpayPaymentScreenState extends State<RazorpayPaymentScreen> {
   }
 
   Future<void> _handlePaymentError(PaymentFailureResponse response) async {
-    for (var item in widget.items) {
-      await db.decrementQuant(
-        name: item["name"] ?? "item_name",
-        decrementValue: int.tryParse(item["quantity"].toString()) ?? 0,
-      );
-    }
     _navigateToQrScreen();
     _showSnackBar("Payment Failed: ${response.message ?? 'Error occurred'}");
     setState(() {
