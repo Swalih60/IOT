@@ -63,6 +63,15 @@ class _QrScreenState extends State<QrScreen> {
         transactionCode = code;
         qrData = _generateQrData(widget.items);
         setState(() {}); // Update the UI with the new QR code
+
+        // Insert transaction record into the database
+        await supabase.from('transactions').insert({
+          'uid': Supabase.instance.client.auth.currentUser?.id,
+          'created_at': DateTime.now().toIso8601String(),
+          'transaction_code': transactionCode,
+          'status': 'NOT_USED',
+          'items': widget.items.map((item) => item['name']).toList(),
+        });
         break;
       }
     }

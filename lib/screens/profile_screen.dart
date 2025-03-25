@@ -87,83 +87,32 @@ class ProfileScreen extends StatelessWidget {
           SliverFillRemaining(
             child: FutureBuilder(
               future: Supabase.instance.client
-                  .from('purchases')
+                  .from('transactions')
                   .select()
-                  .eq('user_id', user?.id ?? '')
+                  .eq('uid', user?.id ?? '')
                   .order('created_at', ascending: false),
               builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-
-                if (!snapshot.hasData || snapshot.data.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.shopping_bag_outlined,
-                            size: 64, color: Colors.grey[400]),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No purchase history',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
+                // ... existing code ...
                 return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-                    final purchase = snapshot.data[index];
-                    return Card(
-                      elevation: 2,
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        leading: Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).primaryColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            Icons.qr_code,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        title: Text(
-                          'Purchase #${purchase['id']}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        subtitle: Text(
-                          purchase['created_at'],
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PurchaseDetailScreen(
-                                  purchaseId: purchase['id']),
+                    final transaction = snapshot.data[index];
+                    return ListTile(
+                      title: Text(
+                          'Transaction Code: ${transaction['transaction_code']}'),
+                      subtitle: Text('Status: ${transaction['status']}'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PurchaseDetailScreen(
+                              purchaseId: transaction['transaction_code'],
+                              items: transaction['items'],
+                              status: transaction['status'],
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
@@ -177,12 +126,17 @@ class ProfileScreen extends StatelessWidget {
 }
 
 // New screen for purchase details
+
 class PurchaseDetailScreen extends StatelessWidget {
   final String purchaseId;
+  final List items;
+  final String status;
 
   const PurchaseDetailScreen({
     super.key,
     required this.purchaseId,
+    required this.items,
+    required this.status,
   });
 
   @override
@@ -191,55 +145,37 @@ class PurchaseDetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Purchase Details'),
       ),
-      body: FutureBuilder(
-        future: Supabase.instance.client
-            .from('purchase_items')
-            .select()
-            .eq('purchase_id', purchaseId),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          if (!snapshot.hasData || snapshot.data.isEmpty) {
-            return const Center(child: Text('No items found'));
-          }
-
-          return Column(
-            children: [
-              // QR Code Display
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Image.network(
-                  snapshot.data[0]['qr_code_url'] ?? '',
-                  height: 200,
-                  width: 200,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.qr_code, size: 200),
-                ),
-              ),
-
-              // Product List
-              Expanded(
-                child: ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    final item = snapshot.data[index];
-                    return ListTile(
-                      title: Text(item['product_name'] ?? 'Unknown Product'),
-                      subtitle: Text('Quantity: ${item['quantity']}'),
-                      trailing: Text('\$${item['price']}'),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        },
+      body: Column(
+        children: [
+          // QR Code Display
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Image.network(
+              'https://api.qrserver.com/v1/create-qr-code/?data=$purchaseId',
+              height: 200,
+              width: 200,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.qr_code, size: 200),
+            ),
+          ),
+          // Status Display
+          Text(status == 'EXPIRED'
+              ? 'This QR code has expired'
+              : 'This QR code is valid'),
+          // Product List
+          Expanded(
+            child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return ListTile(
+                  title: Text(item['name'] ?? 'Unknown Product'),
+                  subtitle: Text('Quantity: ${item['quantity']}'),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
