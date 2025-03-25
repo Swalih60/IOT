@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:iot/auth/login_screen.dart';
-import 'package:iot/screens/bottom_nav.dart';
+import 'package:iot/screens/store_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -57,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen>
       // If user is logged in, navigate to Home Screen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => NavScreen()),
+        MaterialPageRoute(builder: (context) => const StoreScreen()),
       );
     } else {
       // If user is not logged in, navigate to Login Screen

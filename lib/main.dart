@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iot/providers/bottom_nav_provider.dart';
 import 'package:iot/providers/cart_provider.dart';
 import 'package:iot/providers/store_provider.dart';
 import 'package:iot/providers/value_provider.dart';
@@ -25,9 +24,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => BottomProvider(),
-        ),
-        ChangeNotifierProvider(
           create: (context) => CartProvider(),
         ),
         ChangeNotifierProvider(
@@ -40,7 +36,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.dark(),
-        home: SplashScreen(),
+        home: const SplashScreen(),
         darkTheme: ThemeData.dark(),
       ),
     );

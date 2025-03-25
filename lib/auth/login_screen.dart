@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iot/auth/signup_screen.dart';
 import 'package:iot/screens/admin_screen.dart';
-import 'package:iot/screens/bottom_nav.dart';
+import 'package:iot/screens/store_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GlassLoginScreen extends StatefulWidget {
@@ -174,7 +174,8 @@ class _GlassLoginScreenState extends State<GlassLoginScreen> {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => NavScreen(),
+                                        builder: (context) =>
+                                            const StoreScreen(),
                                       ));
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(

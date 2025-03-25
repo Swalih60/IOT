@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-class BottomProvider extends ChangeNotifier {
-  int currentIndex = 0;
-  void changeIndex({required int index}) {
-    currentIndex = index;
-    notifyListeners();
-  }
-}
+// class BottomProvider extends ChangeNotifier {
+//   int currentIndex = 0;
+//   void changeIndex({required int index}) {
+//     currentIndex = index;
+//     notifyListeners();
+//   }
+// }

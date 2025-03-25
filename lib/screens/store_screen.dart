@@ -4,6 +4,7 @@ import 'package:iot/providers/cart_provider.dart';
 import 'package:iot/providers/store_provider.dart';
 import 'package:iot/providers/value_provider.dart';
 import 'package:iot/screens/cart_screen.dart';
+import 'package:iot/screens/profile_screen.dart';
 import 'package:iot/services/database_service.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -51,6 +52,17 @@ class _StoreScreenState extends State<StoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 20.0),
+          child: IconButton(
+              iconSize: 36,
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ));
+              },
+              icon: const Icon(Icons.person)),
+        ),
         title: const Text("I-VEND"),
         centerTitle: true,
         elevation: 20,
