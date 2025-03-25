@@ -112,7 +112,7 @@ class _QrScreenState extends State<QrScreen> {
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white, size: 36),
               onPressed: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const StoreScreen(),
                 )); // Navigate to store screen
               },

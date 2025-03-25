@@ -92,14 +92,20 @@ class ProfileScreen extends StatelessWidget {
                   .eq('uid', user?.id ?? '')
                   .order('created_at', ascending: false),
               builder: (context, AsyncSnapshot snapshot) {
-                // ... existing code ...
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data.isEmpty) {
+                  return const Center(child: Text('No transactions found.'));
+                }
+
                 return ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
                     final transaction = snapshot.data[index];
                     return ListTile(
-                      title: Text(
-                          'Transaction Code: ${transaction['transaction_code']}'),
+                      title: Text('Date: ${transaction['created_at']}'),
                       subtitle: Text('Status: ${transaction['status']}'),
                       onTap: () {
                         Navigator.push(
@@ -146,14 +152,15 @@ class PurchaseDetailScreen extends StatelessWidget {
         title: const Text('Purchase Details'),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // QR Code Display
           Container(
             padding: const EdgeInsets.all(16),
             child: Image.network(
               'https://api.qrserver.com/v1/create-qr-code/?data=$purchaseId',
-              height: 200,
-              width: 200,
+              height: 400,
+              width: 400,
               errorBuilder: (context, error, stackTrace) =>
                   const Icon(Icons.qr_code, size: 200),
             ),
@@ -162,15 +169,24 @@ class PurchaseDetailScreen extends StatelessWidget {
           Text(status == 'EXPIRED'
               ? 'This QR code has expired'
               : 'This QR code is valid'),
+
+          const SizedBox(
+            height: 10,
+          ),
+
+          const Text(
+            "ITEMS",
+            style: TextStyle(fontSize: 26),
+          ),
           // Product List
           Expanded(
             child: ListView.builder(
-              itemCount: items.length,
+              itemCount: items.length ?? 0,
               itemBuilder: (context, index) {
-                final item = items[index];
+                // final item = items[index];
                 return ListTile(
-                  title: Text(item['name'] ?? 'Unknown Product'),
-                  subtitle: Text('Quantity: ${item['quantity']}'),
+                  title: Text(items[index] ?? 'Unknown Product'),
+                  // subtitle: Text('Quantity: ${item['quantity']}'),
                 );
               },
             ),
