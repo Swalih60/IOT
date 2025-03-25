@@ -176,14 +176,26 @@ class PurchaseDetailScreen extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: QrImageView(
-                backgroundColor: Colors.white,
-                data: qr_data,
-                version: QrVersions.auto,
-                size: 300.0,
-              ),
+            // Use Stack to overlay the QR code with a red cross if expired
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: QrImageView(
+                    backgroundColor: Colors.white,
+                    data: qr_data,
+                    version: QrVersions.auto,
+                    size: 300.0,
+                  ),
+                ),
+                if (status == 'EXPIRED') // Show red cross if expired
+                  const Icon(
+                    Icons.cancel,
+                    color: Colors.red,
+                    size: 300,
+                  ),
+              ],
             ),
             // Status Display
             Text(status == 'EXPIRED'
