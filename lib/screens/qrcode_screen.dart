@@ -83,7 +83,6 @@ class _QrScreenState extends State<QrScreen> {
     String data = '$transactionCode|';
 
     List<String> itemDetails = items.map((item) {
-      String name = item['name'] ?? 'Unknown';
       String position = item['pos'] ?? 'Unknown';
       int quantity = item['quantity'] ?? 0;
       return '$position $quantity';
