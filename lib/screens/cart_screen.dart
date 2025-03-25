@@ -21,7 +21,7 @@ class _CartScreenState extends State<CartScreen> {
     try {
       // Process each item sequentially
       for (var item in items) {
-        amount += item["price"];
+        amount += item["price"] * item["quantity"];
       }
 
       if (mounted) {

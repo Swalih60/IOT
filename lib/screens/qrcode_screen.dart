@@ -70,7 +70,10 @@ class _QrScreenState extends State<QrScreen> {
           'created_at': DateTime.now().toIso8601String(),
           'transaction_code': transactionCode,
           'status': 'NOT_USED',
-          'items': widget.items.map((item) => item['name']).toList(),
+          'items': widget.items
+              .map((item) => '${item['name']} x${item['quantity']}')
+              .toList(),
+          'qr_data': qrData,
         });
         break;
       }
